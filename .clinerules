@@ -1,0 +1,29 @@
+# GAD — Roo Code Global Rules
+
+## Project Identity
+- This is **GAD (Generative AI Dashboard)** — a backend application using Express.js, Firebase, Firestore, and Google Cloud.
+- All documentation lives in the Obsidian vault at `docs/`.
+
+## Communication Standards
+- Use English for all responses and code comments.
+- Use `[[wikilinks]]` when referencing Obsidian notes.
+- Use relative paths when referencing files.
+
+## Code Standards
+- Follow the existing code patterns in the codebase.
+- Use async/await over raw promises.
+- Handle errors with try/catch and return meaningful error responses.
+- Document public functions with JSDoc comments.
+- Keep functions small and focused — single responsibility principle.
+
+## Documentation Standards
+- Update `PROJECT_STATE.md` with session summaries after each work session.
+- Log decisions as ADRs in `docs/decisions/` when architectural choices are made.
+- Log errors in `docs/errors/error-catalog.md` when patterns are discovered.
+- Log daily work in `docs/sprints/YYYY-MM-DD.md`.
+
+## Mode Rules
+- Each mode has its own rules file in `.roo/` directory.
+- Orchestrator delegates subtasks; does not write code directly.
+- Code mode implements; does not plan architecture.
+- Architect mode designs; does not implement.

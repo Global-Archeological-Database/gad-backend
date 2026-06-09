@@ -1,0 +1,11 @@
+.env
+.gad-service-account.json
+node_modules/
+firebase-debug.log
+
+# Firebase agent skills (CLI tooling, not project code)
+.agents/
+skills-lock.json
+
+# Firebase debug logs
+firebase-debug.*.log*

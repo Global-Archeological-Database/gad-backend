@@ -1,0 +1,39 @@
+# =============================================================================
+# GAD Backend — CI Workflow
+# =============================================================================
+# Runs on push to main and on pull requests targeting main.
+# Steps: checkout → setup Node.js 22 → install deps → run tests
+# =============================================================================
+
+name: CI — Backend
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+        env:
+          # Provide minimal env vars so the app can bootstrap during tests
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || 'test-placeholder-key' }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS || '' }}
