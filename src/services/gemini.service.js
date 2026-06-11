@@ -96,19 +96,6 @@ Please provide your analysis covering the following areas:
  * @returns {Promise<string>} A JSON array of indices (as text) representing similar artifacts.
  */
 async function findSimilarArtifacts(sourceArtifact, candidateArtifacts) {
-  const sourceFields = [
-    ['Title', sourceArtifact.title],
-    ['Description', sourceArtifact.description],
-    ['Age / Period', sourceArtifact.age],
-    ['Materials', Array.isArray(sourceArtifact.materials) ? sourceArtifact.materials.join(', ') : sourceArtifact.materials],
-    ['Cultural Origin', sourceArtifact.cultural_origin],
-    ['Condition', sourceArtifact.condition],
-    ['Country', sourceArtifact.country],
-    ['Tags', sourceArtifact.tags ? sourceArtifact.tags.join(', ') : null],
-  ].filter(([, value]) => value != null)
-   .map(([key, value]) => `${key}: ${value}`)
-   .join('\n');
-
   const sourceText = buildArtifactText(sourceArtifact);
 
   const candidatesText = candidateArtifacts.map((a, i) => {

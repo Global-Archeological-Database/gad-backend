@@ -1,39 +1,51 @@
 # Artifacts Schema Reference
 
-**Last Updated**: 2026-06-09
-
-> **Note**: The canonical schema documentation has moved to `docs/schemas/artifact-schema.md`. This page serves as a feature-context reference.
+**Last Updated**: 2026-06-10
 
 ## Firestore Document Structure
 
-The `artifacts` collection stores archaeological artifact records with the following structure:
-
 ### Core Fields
-- `title` (string, required) — Artifact name
-- `description` (string, required) — Detailed description
-- `latitude` (number, required) — Geographic latitude
-- `longitude` (number, required) — Geographic longitude
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | `string` | ✅ | Artifact name (1-200 chars) |
+| `description` | `string` | ✅ | Detailed description |
+| `latitude` | `number` | ✅ | Geographic latitude of discovery/origin |
+| `longitude` | `number` | ✅ | Geographic longitude of discovery/origin |
 
 ### Optional Metadata
-- `age` (string) — Time period
-- `materials` (array of strings) — Materials
-- `cultural_origin` (string) — Civilization/culture
-- `condition` (string) — Preservation state
-- `country` (string) — Country of origin
-- `image_urls` (array of strings) — Uploaded images
+| Field | Type | Description |
+|-------|------|-------------|
+| `age` | `string` | Time period or age (e.g., "Bronze Age, ~2000 BCE") |
+| `materials` | `array<string>` | Materials used (e.g., ["clay", "paint"]) |
+| `cultural_origin` | `string` | Civilization or culture of origin |
+| `condition` | `string` | Preservation condition (e.g., "good", "fair", "poor") |
+| `country` | `string` | Country of discovery/origin |
+| `tags` | `array<string>` | User-defined tags |
+| `location` | `map` | Location sub-object (may contain `country`, `region`, etc.) |
+| `image_url` | `string` | URL of uploaded artifact image |
+| `model_url` | `string` | URL of uploaded 3D model |
+| `thumbnail_url` | `string` | URL of uploaded thumbnail |
+| `is_3d` | `boolean` | Whether artifact has a 3D model |
+| `uploader_name` | `string` | Display name of the uploader |
 
 ### Auto-Set Fields
-- `uploader_id`, `uploader_email`, `uploader_name` — Set on creation
-- `view_count` — Incremented on each GET
-- `ai_analysis`, `ai_analysis_timestamp` — Set by AI analyzer
-- `created_at`, `updated_at` — Timestamps
+| Field | Type | Description |
+|-------|------|-------------|
+| `uploader_id` | `string` | Firebase UID of the uploader (set from auth) |
+| `uploader_email` | `string` | Email of the uploader (set from auth) |
+| `view_count` | `number` | View counter (incremented on each GET) |
+| `ai_analysis` | `string` | Cached AI analysis result |
+| `ai_analysis_timestamp` | `timestamp` | When AI analysis was last performed |
+| `created_at` | `timestamp` | Document creation timestamp (server timestamp) |
+| `updated_at` | `timestamp` | Document last update timestamp (server timestamp) |
 
 ## Validation Rules
-- `title`: 1-500 characters
-- `description`: 1-5000 characters
-- `latitude`: -90 to 90
-- `longitude`: -180 to 180
+- `title`: Required, 1-200 characters
+- `description`: Required, minimum 10 characters
+- `latitude`: Required, must be a valid number
+- `longitude`: Required, must be a valid number
+- `image_url`, `model_url`, `thumbnail_url`: Optional, nullable strings
 
 ## See Also
-- [`docs/schemas/artifact-schema.md`](../schemas/artifact-schema.md) — Full schema with types and examples
-- [`docs/api/artifacts-endpoints.md`](../api/artifacts-endpoints.md) — API reference
+- [[docs/schemas/artifact-schema.md|Full Artifact Schema]]
+- [[docs/features/artifacts/api.md|Artifacts API Reference]]

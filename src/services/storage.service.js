@@ -6,7 +6,7 @@
 // Provides signed-URL generation for direct client uploads.
 // ---------------------------------------------------------------------------
 
-const { admin, storage } = require('../config/firebase.config');
+const { storage } = require('../config/firebase.config');
 
 /**
  * Generates a V4 signed upload URL for direct client-to-Storage uploads.

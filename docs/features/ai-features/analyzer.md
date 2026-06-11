@@ -6,7 +6,7 @@ priority: medium
 # AI Artifact Analyzer
 
 **Status**: `done` ✅
-**Last Updated**: 2026-06-09
+**Last Updated**: 2026-06-10
 
 ## Overview
 AI-powered artifact analysis using Gemini 2.5 Flash. Analyzes artifact metadata (title, description, cultural origin, materials, age, condition) and returns structured analysis with historical context, significance assessment, and preservation recommendations.
@@ -25,7 +25,7 @@ AI-powered artifact analysis using Gemini 2.5 Flash. Analyzes artifact metadata 
   6. Return `{ analysis, timestamp }`
 
 ### Prompt
-The `buildAnalysisPrompt()` function constructs a detailed prompt asking Gemini to:
+The [`buildAnalysisPrompt()`](src/services/gemini.service.js:61) function constructs a detailed prompt asking Gemini to:
 - Provide historical context and significance
 - Assess preservation condition
 - Offer recommendations for further research
@@ -46,7 +46,7 @@ The `buildAnalysisPrompt()` function constructs a detailed prompt asking Gemini 
 - [x] Rate limited to prevent abuse
 
 ## Files
-- `src/controllers/ai.controller.js` — `analyze()` function
-- `src/services/gemini.service.js` — `analyzeArtifact()` and `buildAnalysisPrompt()` functions
-- `src/routes/ai.routes.js` — Route registration
-- `src/middleware/rateLimit.middleware.js` — AI rate limiter
+- [`src/controllers/ai.controller.js`](src/controllers/ai.controller.js:70) — `analyze()` function
+- [`src/services/gemini.service.js`](src/services/gemini.service.js:46) — `analyzeArtifact()` and `buildAnalysisPrompt()` functions
+- [`src/routes/ai.routes.js`](src/routes/ai.routes.js) — Route registration
+- [`src/middleware/rateLimit.middleware.js`](src/middleware/rateLimit.middleware.js) — AI rate limiter

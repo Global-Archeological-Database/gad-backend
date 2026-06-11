@@ -45,7 +45,9 @@ async function queryArtifacts(options = {}) {
 
   const safeLimit = Math.min(Math.max(1, limit), 500);
 
-  let query = db.collection('artifacts').orderBy('__name__').limit(safeLimit + 1);
+  // Order by created_at DESC to match deployed composite indexes.
+  // All composite indexes in firestore.indexes.json use created_at DESC as the second field.
+  let query = db.collection('artifacts').orderBy('created_at', 'desc').limit(safeLimit + 1);
 
   // Apply filters
   if (country) {

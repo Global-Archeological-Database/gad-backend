@@ -14,6 +14,9 @@
 - [[../../../../../projects/gad-frontend/.github/workflows/ci-frontend|Frontend CI Workflow]]
 - [[../Dockerfile|Backend Dockerfile]]
 
+## UI / Frontend
+- [[../../../projects/gad-frontend/PROJECT_STATE.md|Header & Navigation]] — Scroll-aware header, responsive nav, auth-aware UI (Prompt 02)
+
 ## Reference
 - [[api/artifacts-endpoints|Artifacts API]]
 - [[schemas/artifact-schema|Artifact Schema]]

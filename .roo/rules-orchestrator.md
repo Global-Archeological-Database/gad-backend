@@ -34,14 +34,14 @@
 ## Current Status
 - ✅ Backend: Fully built and deployed to Cloud Run (api.the-gad.org)
 - ✅ Frontend: Fully built and deployed to Vercel (the-gad.org)
-- ✅ Maps integration: Implemented with @vis.gl/react-google-maps
+- ✅ Maps integration: Implemented with @vis.gl/react-google-maps (search functional)
 - ✅ Auth system: Firebase Auth with Email/Password, admin auto-assignment
 - ✅ AI features: Chatbot (public), artifact analysis, find-similar
 - ✅ Admin panel: User management, artifact moderation
 - ✅ Dashboard: User's submitted artifacts
-- ❌ Google Maps not working in production (env vars not set in Vercel)
-- ❌ No test suite
-- ❌ No CI/CD pipeline
+- ✅ Test suite: 41 tests across 4 test files (Jest + manual mocks)
+- ✅ CI/CD pipeline: GitHub Actions (CI on PR, CD on push to main)
+- ✅ Google Maps: Working in production (env vars configured in Vercel)
 
 ## Engineering Tenets (ENFORCE THESE)
 1. **Single Responsibility** — Each function does one thing. Controllers call services, services do the work.

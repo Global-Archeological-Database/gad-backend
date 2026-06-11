@@ -3,7 +3,7 @@ tags: [feature, done]
 status: done
 type: feature
 created: 2026-05-26
-updated: 2026-06-03
+updated: 2026-06-10
 related: []
 ---
 
@@ -18,13 +18,16 @@ Provides an interactive archaeological AI assistant that helps users learn about
 - [x] Conversation history support
 - [x] Rate limiting (20 req/hour via aiLimiter)
 - [x] Frontend chat UI integration
+- [x] Public access (no auth required, per ADR-006)
 
 ## Implementation Notes
-- Uses `gemini-2.0-flash-exp` model via `@google/generative-ai` SDK
+- Uses `gemini-2.5-flash` model via `@google/generative-ai` SDK
 - System persona set to knowledgeable archaeological expert
-- `chat()` function in `src/services/gemini.service.js` handles model interaction
-- `chatbot()` controller in `src/controllers/ai.controller.js` handles validation and response formatting
-- Route registered at `POST /api/ai/chatbot` in `src/routes/ai.routes.js`
+- `chat()` function in [`src/services/gemini.service.js`](src/services/gemini.service.js:25) handles model interaction
+- `chatbot()` controller in [`src/controllers/ai.controller.js`](src/controllers/ai.controller.js:17) handles validation and response formatting
+- Route registered at `POST /api/ai/chatbot` in [`src/routes/ai.routes.js`](src/routes/ai.routes.js)
+- Returns `{ reply, history }` — includes updated conversation history for client-side state management
+- Public access per [ADR-006](../../decisions/ADR-006-chatbot-public-access.md)
 
 ## API Endpoints
 - [[../../api/ai-endpoints|AI Endpoints]]

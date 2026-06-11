@@ -73,40 +73,44 @@ A living catalog of errors encountered during development, their root causes, fi
 
 ## Error: Orphaned Providers.tsx Component
 
-- **Status**: Unresolved
+- **Status**: Resolved
 - **First Seen**: 2026-06-09
-- **Root Cause**: `src/components/layout/Providers.tsx` exists but is not imported anywhere. It has its own `onAuthStateChanged` listener and imports from `@/lib/queryClient` (which doesn't exist — `queryClient` is in `lib/queryClient.ts`). The actual layout uses `src/lib/providers.tsx` instead.
-- **Fix Applied**: None yet — needs to be deleted
+- **Resolved**: 2026-06-10
+- **Root Cause**: `src/components/layout/Providers.tsx` existed but was not imported anywhere. It had its own `onAuthStateChanged` listener and imported from `@/lib/queryClient` (which doesn't exist — `queryClient` is in `lib/queryClient.ts`). The actual layout uses `src/lib/providers.tsx` instead.
+- **Fix Applied**: File deleted and committed. The file had already been removed from the working tree (unstaged deletion). Staged and committed as `8bfaff8` with message "chore: remove orphaned Providers.tsx from components/layout".
 - **Files**: `src/components/layout/Providers.tsx`
 
 ---
 
 ## Error: Stale Orchestrator Rules
 
-- **Status**: Unresolved
+- **Status**: Resolved
 - **First Seen**: 2026-06-09
-- **Root Cause**: `.roo/rules-orchestrator.md` contains outdated information claiming the backend needs restructuring and no frontend exists
-- **Fix Applied**: None yet — needs content update
+- **Resolved**: 2026-06-10
+- **Root Cause**: `.roo/rules-orchestrator.md` contained outdated status indicators (❌ Google Maps not working, ❌ No test suite, ❌ No CI/CD pipeline)
+- **Fix Applied**: Updated all status indicators to ✅. Google Maps working, 41 backend tests + 26 frontend tests exist, CI/CD pipelines operational.
 - **Files**: `.roo/rules-orchestrator.md`
 
 ---
 
 ## Error: Schema Docs Don't Match Actual Schema
 
-- **Status**: Unresolved
+- **Status**: Resolved
 - **First Seen**: 2026-06-09
+- **Resolved**: 2026-06-10
 - **Root Cause**: Schema documentation was written during initial planning and never updated to reflect actual Firestore schema
-- **Fix Applied**: Documentation updated in 2026-06-09 audit session
+- **Fix Applied**: Documentation updated in 2026-06-09 audit session. Further fixes in 2026-06-10: `image_urls` → `image_url`/`model_url`/`thumbnail_url`, indexes updated to match actual code (`country` not `location.country`, `created_at DESC` ordering), missing fields added (`is_3d`, `tags`, `location`).
 - **Files**: `docs/schemas/artifact-schema.md`, `docs/schemas/user-schema.md`, `docs/schemas/indexes.md`
 
 ---
 
 ## Error: `getFieldKey()` Uses Unreliable Object Key Ordering
 
-- **Status**: Unresolved
+- **Status**: Resolved
 - **First Seen**: 2026-06-09
-- **Root Cause**: `gemini.service.js` uses `Object.keys(artifact)[index]` to map indices back to field names, which depends on JavaScript object key ordering — this is fragile and may produce incorrect results
-- **Fix Applied**: None yet — needs explicit field mapping
+- **Resolved**: 2026-06-09
+- **Root Cause**: `gemini.service.js` used `Object.keys(artifact)[index]` to map indices back to field names, which depends on JavaScript object key ordering — this is fragile and may produce incorrect results
+- **Fix Applied**: The `getFieldKey()` function was removed during the refactor to `buildArtifactText()`, which uses explicit field access instead of fragile index-based key lookup. The function no longer exists in the codebase.
 - **Files**: `src/services/gemini.service.js`
 
 ---

@@ -6,7 +6,7 @@ priority: high
 # Maps Integration — Overview
 
 **Status**: `done` ✅
-**Last Updated**: 2026-06-09
+**Last Updated**: 2026-06-10
 
 ## Overview
 Interactive map explorer for browsing archaeological artifacts geographically. Uses `@vis.gl/react-google-maps` (Google Maps JavaScript API via React wrapper).
@@ -20,7 +20,7 @@ Interactive map explorer for browsing archaeological artifacts geographically. U
 - `ArtifactInfoWindow` on selected marker
 - `ArtifactDetailPanel` slide-in panel for selected artifact details
 - FAB button (authenticated → opens submit form sheet, unauthenticated → redirects to /login)
-- Search bar (placeholder — not yet functional)
+- Search bar (functional — uses Google Maps Places API)
 - Default center: `{ lat: 20, lng: 0 }`, zoom: 3
 
 ### State Management
@@ -39,14 +39,11 @@ Interactive map explorer for browsing archaeological artifacts geographically. U
 - [x] Detail panel slides in on selection
 - [x] Submit button for authenticated users
 - [x] Custom map styling
-- [ ] Search bar functional (placeholder only)
+- [x] Search bar functional (Google Maps Places API)
 
 ## Environment Variables
 - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` — Google Maps API key
 - `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID` — Google Maps Map ID
-
-## Known Issues
-- Search bar is a non-functional placeholder — needs implementation.
 
 ## Files
 - `src/components/map/MapExplorer.tsx` — Main map component

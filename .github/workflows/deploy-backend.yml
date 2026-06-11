@@ -22,7 +22,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   SERVICE_NAME: gad-backend
-  REGION: europe-west1                    # Adjust to your Cloud Run region
+  REGION: europe-west1                    # Cloud Run service region
   ARTIFACT_REGISTRY_REPO: gad-backend     # Artifact Registry repository name
   IMAGE: europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/gad-backend/gad-backend:latest
 

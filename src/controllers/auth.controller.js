@@ -19,7 +19,14 @@ const ALLOWED_PROFILE_FIELDS = ['display_name', 'settings.theme', 'settings.show
  */
 async function register(req, res) {
   try {
-    const { uid, email } = req.user;
+    const { uid, email } = req.body;
+
+    if (!uid || !email) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'uid and email are required in request body',
+      });
+    }
 
     // Check if user document already exists
     const existingDoc = await db.collection('users').doc(uid).get();
@@ -60,7 +67,7 @@ async function register(req, res) {
         event: 'error',
         controller: 'auth.register',
         message: err.message,
-        uid: req.user.uid,
+        uid: req.body.uid,
         timestamp: new Date().toISOString(),
       })
     );

@@ -12,7 +12,7 @@
       "collectionGroup": "artifacts",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "location.country", "order": "ASCENDING" },
+        { "fieldPath": "country", "order": "ASCENDING" },
         { "fieldPath": "created_at", "order": "DESCENDING" }
       ]
     },
@@ -45,6 +45,14 @@
       "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "cultural_origin", "order": "ASCENDING" },
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "artifacts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "condition", "order": "ASCENDING" },
         { "fieldPath": "created_at", "order": "DESCENDING" }
       ]
     }

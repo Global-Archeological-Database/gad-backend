@@ -1,6 +1,6 @@
 # Settings for Backend (on Cloud Run).
 # See https://firebase.google.com/docs/app-hosting/configure#cloud-run
-runtime: nodejs20
+runtime: nodejs22
 runConfig:
   minInstances: 0
   maxInstances: 100
@@ -26,8 +26,6 @@ runConfig:
 env:
   - variable: FRONTEND_URL
     secret: FRONTEND_URL
-  - variable: GOOGLE_MAPS_SERVER_KEY
-    secret: GOOGLE_MAPS_SERVER_KEY
   - variable: GEMINI_API_KEY
     secret: GEMINI_API_KEY
   - variable: GOOGLE_MAPS_API_KEY

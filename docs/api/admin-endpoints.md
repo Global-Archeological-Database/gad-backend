@@ -1,12 +1,27 @@
 # Admin API Endpoints
 
-**Last Updated**: 2026-06-09
+**Last Updated**: 2026-06-10
 
 ## `GET /api/admin/users`
 List all users. Admin-only.
 
 **Auth**: `requireAuth` + `requireAdmin`
-**Response**: `{ users: UserProfile[] }`
+**Response** (200):
+```json
+{
+  "users": [
+    {
+      "uid": "firebase-uid-123",
+      "email": "user@example.com",
+      "display_name": "John Doe",
+      "role": "user",
+      "settings": { "theme": "light", "show_name_publicly": true },
+      "created_at": Timestamp,
+      "updated_at": Timestamp
+    }
+  ]
+}
+```
 
 ---
 
@@ -15,18 +30,35 @@ Update a user's role. Admin-only. Cannot self-demote.
 
 **Auth**: `requireAuth` + `requireAdmin`
 **Body**: `{ role: "user" | "admin" }`
-**Response**: `{ message: "User role updated", uid, role }`
+**Response** (200):
+```json
+{
+  "uid": "firebase-uid-123",
+  "email": "user@example.com",
+  "display_name": "John Doe",
+  "role": "admin",
+  "settings": { "theme": "light", "show_name_publicly": true },
+  "created_at": Timestamp,
+  "updated_at": Timestamp
+}
+```
 **Errors**:
-- `400` — Invalid role
+- `400` — Invalid role (must be "user" or "admin")
 - `403` — Cannot change own role
 - `404` — User not found
 
 ---
 
 ## `DELETE /api/admin/artifacts/:id`
-Delete any artifact. Admin-only. Also logs storage paths for cleanup.
+Delete any artifact. Admin-only. Also deletes associated files from Cloud Storage.
 
 **Auth**: `requireAuth` + `requireAdmin`
-**Response**: `{ message: "Artifact deleted by admin", id }`
+**Response** (200):
+```json
+{
+  "success": true,
+  "deletedId": "artifact-id-123"
+}
+```
 **Errors**:
 - `404` — Artifact not found

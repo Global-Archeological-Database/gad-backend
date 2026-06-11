@@ -118,20 +118,40 @@ async function deleteArtifact(req, res) {
       });
     }
 
-    // Log storage paths for cleanup
+    // Delete associated files from Cloud Storage
     const data = doc.data();
+    const bucket = admin.storage().bucket();
     const storagePaths = [];
     if (data.image_url) storagePaths.push(data.image_url);
     if (data.model_url) storagePaths.push(data.model_url);
     if (data.thumbnail_url) storagePaths.push(data.thumbnail_url);
 
     if (storagePaths.length > 0) {
-      console.log(
-        JSON.stringify({
-          event: 'storage_cleanup_pending',
-          artifactId: id,
-          storagePaths,
-          timestamp: new Date().toISOString(),
+      // Extract file paths from public URLs
+      const filePaths = storagePaths.map((url) => {
+        try {
+          const urlObj = new URL(url);
+          return decodeURIComponent(urlObj.pathname.split('/o/')[1] || urlObj.pathname);
+        } catch {
+          return url;
+        }
+      });
+
+      // Delete files in parallel
+      await Promise.allSettled(
+        filePaths.map((filePath) => {
+          const file = bucket.file(filePath);
+          return file.delete().catch((err) => {
+            console.error(
+              JSON.stringify({
+                event: 'storage_delete_failed',
+                artifactId: id,
+                filePath,
+                message: err.message,
+                timestamp: new Date().toISOString(),
+              })
+            );
+          });
         })
       );
     }

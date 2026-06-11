@@ -6,7 +6,7 @@ priority: medium
 # AI Find Similar Artifacts
 
 **Status**: `done` ✅
-**Last Updated**: 2026-06-09
+**Last Updated**: 2026-06-10
 
 ## Overview
 AI-powered similarity search that finds artifacts related to a given source artifact. Uses Gemini 2.5 Flash to compare artifact metadata and return indices of similar artifacts from a candidate pool.
@@ -44,9 +44,6 @@ Gemini compares artifacts based on:
 }
 ```
 
-### Known Bug
-The `getFieldKey()` helper function in `gemini.service.js` uses `Object.keys(artifact)[index]` which is fragile — it depends on object key ordering which is not guaranteed in JavaScript. This should be replaced with explicit field mapping.
-
 ## Acceptance Criteria
 - [x] Authenticated users can find similar artifacts
 - [x] Returns ranked list of similar artifacts
@@ -54,6 +51,6 @@ The `getFieldKey()` helper function in `gemini.service.js` uses `Object.keys(art
 - [x] Rate limited to prevent abuse
 
 ## Files
-- `src/controllers/ai.controller.js` — `findSimilar()` function
-- `src/services/gemini.service.js` — `findSimilarArtifacts()` and `buildArtifactText()` functions
-- `src/routes/ai.routes.js` — Route registration
+- [`src/controllers/ai.controller.js`](src/controllers/ai.controller.js:116) — `findSimilar()` function
+- [`src/services/gemini.service.js`](src/services/gemini.service.js:98) — `findSimilarArtifacts()` and `buildArtifactText()` functions
+- [`src/routes/ai.routes.js`](src/routes/ai.routes.js) — Route registration

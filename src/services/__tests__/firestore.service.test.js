@@ -56,7 +56,7 @@ describe('queryArtifacts()', () => {
     const result = await queryArtifacts();
 
     expect(mockCollection).toHaveBeenCalledWith('artifacts');
-    expect(mockOrderBy).toHaveBeenCalledWith('__name__');
+    expect(mockOrderBy).toHaveBeenCalledWith('created_at', 'desc');
     expect(mockLimit).toHaveBeenCalledWith(101); // safeLimit + 1
     expect(result.docs).toHaveLength(100);
     expect(result.lastDoc).toBeNull();
