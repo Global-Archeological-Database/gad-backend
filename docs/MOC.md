@@ -6,7 +6,7 @@
 - [[features/authentication/overview|Authentication]]
 - [[features/artifacts/overview|Artifacts CRUD]]
 - [[features/ai-features/chatbot|AI Chatbot]]
-- [[features/maps-integration/overview|Maps Integration]]
+- [[features/maps-integration/overview|Maps Integration]] — Map Explorer, markers, theme selector
 
 ## DevOps
 - [[../.github/workflows/ci-backend|Backend CI Workflow]]
@@ -21,6 +21,16 @@
 - [[api/artifacts-endpoints|Artifacts API]]
 - [[schemas/artifact-schema|Artifact Schema]]
 - [[errors/error-catalog|Error Catalog]]
+
+## Architecture Decisions
+- [[decisions/ADR-001-generative-ai-not-vertex|ADR-001: Generative AI SDK (not Vertex)]]
+- [[decisions/ADR-002-firestore-schema-v1|ADR-002: Firestore Schema v1]]
+- [[decisions/ADR-003-storage-bucket|ADR-003: Cloud Storage]]
+- [[decisions/ADR-004-express-app-hosting|ADR-004: Express on Cloud Run]]
+- [[decisions/ADR-005-firestore-security-rules-v1|ADR-005: Security Rules v1]]
+- [[decisions/ADR-006-chatbot-public-access|ADR-006: Chatbot Public Access]]
+- [[decisions/ADR-007-resolve-dual-directory|ADR-007: Dual-Directory Consolidation]]
+- [[decisions/ADR-008-map-theme-selector|ADR-008: Map Theme Selector]]
 
 ## Production
 - **Frontend:** [the-gad.org](https://the-gad.org)

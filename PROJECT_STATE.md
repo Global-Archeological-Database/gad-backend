@@ -1,7 +1,7 @@
 # GAD — Project State
 
 > **Single source of truth for current session state and project progress.**
-> Last updated: 2026-06-16 (Correction L: Final Visual QA & Documentation)
+> Last updated: 2026-06-16 (Correction M: Major UI/UX Overhaul — Critical Bug Fixes & Visual Design)
 
 ---
 
@@ -73,6 +73,105 @@
 - [x] Skeleton loaders use warm parchment colors (bg-muted)
 - [x] docs/GAD_FINAL_STATE.md created
 - [x] PROJECT_STATE.md updated
+
+---
+
+## Session: 2026-06-16 — Correction M: Major UI/UX Overhaul
+
+**Branch:** `fix/major-ui-ux-overhaul` (frontend)
+**Status:** ✅ Complete
+**Focus:** Major UI/UX overhaul — fixing critical bugs and improving visual design across the GAD frontend.
+
+### CRITICAL FIXES (P0)
+
+#### 1. Admin Panel Fix — [`src/app/admin/page.tsx`]
+- Fixed missing `useEffect` import causing runtime errors
+- Removed unused `AlertDialogTrigger` import
+- Fixed React 19 anti-pattern in `SettingsTab` — replaced render-time state mutation with proper `useEffect` hook (was causing hydration mismatches and stale state)
+
+#### 2. Chatbot UI Fix — [`src/components/ai/ChatbotWidget.tsx`], [`src/components/ai/ChatMessage.tsx`]
+- **Transparent background fixed:** All surfaces now use solid `bg-card`, `bg-background` instead of `bg-muted/50`, `bg-muted/20` with opacity
+- **Text readability fixed:** All text uses proper `text-card-foreground`, `text-foreground` with full opacity
+- **Expandable:** Added framer-motion expand/collapse with three animation states (collapsed/default/expanded) — toggles between 380×560 and 600×700 on desktop
+- **Dark mode:** All backgrounds use the warm stone palette (`--card: #231F1A`, `--background: #1A1510`)
+- User messages use `bg-primary text-primary-foreground` for proper contrast
+
+#### 3. Map LocationPicker Fix — [`src/components/shared/LocationPicker.tsx`]
+- Removed `disableDefaultUI` which was blocking ALL zoom controls
+- Kept `gestureHandling="greedy"` for scroll/pinch zoom
+- Increased map height from 280px → 320px
+- Added proper visibility for zoom controls
+
+### MAP IMPROVEMENTS (P1)
+
+#### 4. Artifact Markers Visibility — [`src/components/map/MapExplorer.tsx`], [`src/components/map/ArtifactMarker.tsx`]
+- Fixed viewport culling bug: when `mapBounds` is null (initial render), return ALL artifacts instead of empty array
+- Increased marker size from 18px → 22px (28px selected)
+- Added map ref tracking for reliable bounds access
+- Added empty state UI when no artifacts exist
+- Enhanced marker visual design with better shadows, inner ring, bigger hover scale
+
+#### 5. Map Theme Selector — [`src/components/map/MapExplorer.tsx`]
+- Added floating layer control (bottom-left) with 4 themes: Streets, Terrain, Satellite, Dark
+- Uses Google Maps `mapTypeId` for terrain/satellite, custom styles for streets/dark
+- Auto-switches to Dark theme when app's `resolvedTheme` changes to dark
+- Menu closes on outside click, polished UI with backdrop blur
+
+### UI IMPROVEMENTS (P2)
+
+#### 6. Theme Toggle Redesign — [`src/components/ui/ThemeToggle.tsx`]
+- Replaced 3-button segmented control (Light/System/Dark) with single smooth toggle
+- Framer-motion AnimatePresence with 90° rotation + scale animation between Sun and Moon icons
+- Uses `resolvedTheme` for reliable light↔dark toggle
+- Maintains same export for backward compatibility with Header + dropdown
+
+#### 7. Footer Nav Removed — [`src/components/layout/Footer.tsx`]
+- Removed redundant nav links (Map, Collection, Contribute) from footer
+- Footer now shows only GAD logo + copyright
+
+#### 8. Inactive Middle Button — Resolved (System button removed with ThemeToggle redesign)
+
+#### 9. Dark Mode Visual Polish — [`src/app/globals.css`]
+- Added `transition-colors duration-300` to body for smooth theme transitions
+- Fixed grain overlay filter artifacts
+- Added dark mode styles for input, select, textarea elements
+- Dark mode card shadows use black for better depth
+- Ensured HTML background fills completely in dark mode
+- Added dark mode hover states for tables, dropdowns, cards
+- Dark mode skeleton, tooltip, badge, divider styling
+
+### ARCHITECTURAL DECISIONS
+- Map theme selector added as a floating UI control rather than a shadcn Select component for better map UX (see ADR-008)
+- Footer nav removed to reduce redundancy per user request
+- Theme toggle simplified to single button (no system mode) for cleaner UX
+
+### Files Modified
+- `src/app/admin/page.tsx` — Fixed missing useEffect import, removed unused AlertDialogTrigger, fixed SettingsTab React 19 anti-pattern
+- `src/components/ai/ChatbotWidget.tsx` — Solid backgrounds, expandable panel, dark mode fixes
+- `src/components/ai/ChatMessage.tsx` — Solid backgrounds, full-opacity text
+- `src/components/shared/LocationPicker.tsx` — Removed disableDefaultUI, increased height to 320px
+- `src/components/map/MapExplorer.tsx` — Fixed viewport culling, added map theme selector, empty state
+- `src/components/map/ArtifactMarker.tsx` — Increased marker size, enhanced visual design
+- `src/components/ui/ThemeToggle.tsx` — Single smooth toggle with framer-motion animation
+- `src/components/layout/Footer.tsx` — Removed redundant nav links
+- `src/app/globals.css` — Dark mode visual polish, transition-colors, input/select/textarea dark styles
+
+### Success Criteria
+- [x] Admin panel loads without runtime errors
+- [x] SettingsTab state updates correctly (no stale state)
+- [x] Chatbot backgrounds are fully opaque in both light and dark mode
+- [x] Chatbot text is readable with full contrast
+- [x] Chatbot panel is expandable (380px ↔ 600px) on desktop
+- [x] LocationPicker zoom controls are visible and functional
+- [x] Map markers render on initial load (no empty map on first render)
+- [x] Map markers are larger and more visible (22px default, 28px selected)
+- [x] Map theme selector shows 4 themes (Streets, Terrain, Satellite, Dark)
+- [x] Map theme auto-switches to Dark when app theme changes to dark
+- [x] Theme toggle is a single button with smooth Sun↔Moon animation
+- [x] Footer shows only GAD logo + copyright (no nav links)
+- [x] Dark mode has smooth transition animations
+- [x] Dark mode input/select/textarea elements are properly styled
+- [x] No regressions in TypeScript compilation
 
 ---
 
@@ -308,6 +407,7 @@ See [`docs/sprints/2026-06-16.md`](docs/sprints/2026-06-16.md) for the full sess
 - ADR-005: Firestore Security Rules v1 with function-based access control
 - ADR-006: AI Chatbot public access with `optionalAuth`
 - ADR-007: Consolidate on `~/gad-backend` as single source of truth; Firebase resource files tracked in workspace, Firebase agent artifacts gitignored
+- ADR-008: Map theme selector as floating UI control (bottom-left overlay) rather than shadcn Select component
 
 ---
 
@@ -479,6 +579,11 @@ See [`docs/sprints/2026-06-16.md`](docs/sprints/2026-06-16.md) for the full sess
 | 2026-06-11 | **GAD UI Prompt 11: AI Analysis & Find Similar Sections ("The Scholar's Deep Dive") — ArtifactAISection with 4 states, AnalysisRenderer, shimmer loading; SimilarArtifactsSection with horizontal scroll, staggered card animations, toast errors** |
 | 2026-06-14 | **Correction F: Dark Mode Implementation — Comprehensive dark mode with archaeological "torchlight" aesthetic using next-themes. ThemeToggle with Light/System/Dark options placed in header, user dropdown, mobile sheet, and dashboard settings. Warm archaeological palette (deep brown backgrounds, golden amber primary, warm off-white text). 11+ components fixed. Google Maps dark style. 18/18 acceptance criteria met.** |
 | 2026-06-14 | **Correction G: Performance & Loading States — Optimized TanStack Query config (5min stale, 30min gc, 2 retries, exponential backoff, refetchOnWindowFocus disabled). Created WarmSkeleton, ArtifactCardSkeleton, ArtifactImage components. Added prefetching, cache headers, progressive AI stage labels. Removed duplicate QueryClient. Consolidated image rendering.** |
+| 2026-06-16 | **Correction H: Navigation Cleanup & Accessibility — Skip-to-content link, mobile nav completeness, breadcrumbs, keyboard audit, ARIA labels. 13/13 success criteria met.** |
+| 2026-06-16 | **Correction J: AI Features Output Quality — Better error messages, minimum database size check, analysis text renderer markdown cleanup, analysis prompt formatting. 9/9 success criteria met.** |
+| 2026-06-16 | **Correction K: Mobile & Cross-Device Experience — Chatbot full-screen on mobile, admin table responsive, 16 touch targets fixed, gallery landscape optimization, 100dvh viewport. 11/11 success criteria met.** |
+| 2026-06-16 | **Correction L: Final Visual QA — Font consistency, border radius, dark mode leaks (19 fixes), icon library audit, skeleton color audit. 13/13 success criteria met.** |
+| 2026-06-16 | **Correction M: Major UI/UX Overhaul — Admin panel fix (useEffect import, SettingsTab anti-pattern), Chatbot UI fix (solid backgrounds, expandable panel), LocationPicker zoom fix, Artifact markers visibility (viewport culling fix, larger markers), Map theme selector (4 themes, auto dark sync), Theme toggle redesign (single smooth toggle), Footer nav removed, Dark mode visual polish (transition-colors, input/select/textarea styles). ADR-008 created.** |
 
 ---
 
