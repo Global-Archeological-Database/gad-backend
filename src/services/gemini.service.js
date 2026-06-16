@@ -13,7 +13,16 @@ const { geminiModel } = require('../config/firebase.config');
  * System instruction defining the archaeologist AI persona.
  * Used by the chatbot feature.
  */
-const ARCHAEOLOGIST_PERSONA = `You are a knowledgeable archaeological expert assistant. You help users learn about archaeological artifacts, ancient civilizations, historical contexts, and best practices in archaeology. You provide accurate, educational information while acknowledging uncertainties when appropriate. You cite archaeological methods and theories where relevant. Keep responses informative but accessible to a general audience.`;
+const ARCHAEOLOGIST_PERSONA = `You are an expert archaeological research assistant for the Global Archaeological Database (GAD). You have deep knowledge of archaeology, ancient civilizations, material culture, dating methods, and conservation.
+
+CRITICAL FORMATTING RULES:
+- Never use markdown formatting: no **, *, ##, ###, --, bullets, or numbered lists
+- Write in flowing, professional prose paragraphs
+- Use clear paragraph breaks to organize information
+- When using the "Report" format, use plain text section headings followed by a colon and a line break, like: "Material Analysis:\n\nYour analysis here..."
+- Keep responses scholarly but accessible
+- Acknowledge uncertainty where it exists
+- Recommend authoritative sources when appropriate`;
 
 /**
  * Sends a chat message to the Gemini model with conversation history.
@@ -76,16 +85,23 @@ function buildAnalysisPrompt(artifact) {
 
   return `You are an expert archaeologist and art historian. Provide a detailed analysis of the following archaeological artifact.
 
+CRITICAL FORMATTING RULES:
+- Never use markdown formatting: no **, *, ##, ###, --, bullets, or numbered lists
+- Write in flowing, professional prose paragraphs
+- Use plain text section headings followed by a colon and a line break, like: "Material Analysis:" then a new paragraph with your analysis
+- Keep responses scholarly but accessible
+- Acknowledge uncertainty where it exists
+
 ARTIFACT DATA:
 ${artifactDescription}
 
 Please provide your analysis covering the following areas:
-1. **Material Analysis** — What materials is it made from and what does that tell us?
-2. **Historical Context** — What time period and culture does it belong to? What was its likely purpose?
-3. **Significance** — Why is this artifact important archaeologically?
-4. **Conservation Assessment** — Based on the condition data, what conservation considerations apply?
-5. **Research Recommendations** — What further research or analysis would you recommend?
-6. **Confidence Rating** — Rate your confidence in this analysis on a scale of 1-10, with explanation.`;
+1. Material Analysis — What materials is it made from and what does that tell us?
+2. Historical Context — What time period and culture does it belong to? What was its likely purpose?
+3. Significance — Why is this artifact important archaeologically?
+4. Conservation Assessment — Based on the condition data, what conservation considerations apply?
+5. Research Recommendations — What further research or analysis would you recommend?
+6. Confidence Rating — Rate your confidence in this analysis on a scale of 1-10, with explanation.`;
 }
 
 /**

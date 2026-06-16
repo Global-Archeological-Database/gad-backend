@@ -103,7 +103,7 @@ describe('analyzeArtifact()', () => {
   };
 
   it('generates content with a properly constructed analysis prompt', async () => {
-    mockGenerateContent.mockResolvedValue(makeGeminiResponse('**Analysis:** ...'));
+    mockGenerateContent.mockResolvedValue(makeGeminiResponse('Material Analysis:\n\nThe artifact is made of...'));
 
     const result = await analyzeArtifact(sampleArtifact);
 
@@ -117,8 +117,10 @@ describe('analyzeArtifact()', () => {
     expect(promptArg).toContain('Material Analysis');
     expect(promptArg).toContain('Historical Context');
     expect(promptArg).toContain('Conservation Assessment');
+    // Verify markdown formatting is forbidden in the prompt
+    expect(promptArg).toContain('Never use markdown formatting');
 
-    expect(result).toBe('**Analysis:** ...');
+    expect(result).toBe('Material Analysis:\n\nThe artifact is made of...');
   });
 
   it('handles artifacts with minimal fields', async () => {

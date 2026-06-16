@@ -6,7 +6,7 @@ priority: medium
 # AI Artifact Analyzer
 
 **Status**: `done` ✅
-**Last Updated**: 2026-06-10
+**Last Updated**: 2026-06-16
 
 ## Overview
 AI-powered artifact analysis using Gemini 2.5 Flash. Analyzes artifact metadata (title, description, cultural origin, materials, age, condition) and returns structured analysis with historical context, significance assessment, and preservation recommendations.
@@ -25,11 +25,13 @@ AI-powered artifact analysis using Gemini 2.5 Flash. Analyzes artifact metadata 
   6. Return `{ analysis, timestamp }`
 
 ### Prompt
-The [`buildAnalysisPrompt()`](src/services/gemini.service.js:61) function constructs a detailed prompt asking Gemini to:
+The [`buildAnalysisPrompt()`](src/services/gemini.service.js:70) function constructs a detailed prompt asking Gemini to:
 - Provide historical context and significance
 - Assess preservation condition
 - Offer recommendations for further research
 - Identify similar known artifacts or archaeological parallels
+
+**Formatting rules (added 2026-06-16):** The prompt now includes a "CRITICAL FORMATTING RULES" section that forbids markdown formatting (`**`, `*`, `##`, `###`, `--`, bullets, numbered lists). The AI is instructed to use plain text section headings followed by a colon (e.g., "Material Analysis:"), and to write in flowing, professional prose paragraphs. This prevents raw markdown symbols from appearing in the analysis output displayed to users.
 
 ### Response Format
 ```json

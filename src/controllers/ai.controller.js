@@ -135,8 +135,13 @@ async function findSimilar(req, res) {
       .filter((doc) => doc.id !== artifactId)
       .map((doc) => ({ id: doc.id, ...doc.data() }));
 
-    if (candidateArtifacts.length === 0) {
-      return res.json({ similar: [] });
+    // Minimum database size check — need at least 2 other artifacts for meaningful comparison
+    if (candidateArtifacts.length < 2) {
+      return res.json({
+        similar: [],
+        message: 'not_enough_data',
+        hint: 'The database needs more artifacts to find similarities.',
+      });
     }
 
     // Get AI similarity results
@@ -161,7 +166,11 @@ async function findSimilar(req, res) {
           timestamp: new Date().toISOString(),
         })
       );
-      return res.json({ similar: [] });
+      return res.json({
+        similar: [],
+        message: 'parse_error',
+        hint: 'The AI similarity search encountered an issue. Please try again.',
+      });
     }
 
     // Map indices back to full artifact objects
@@ -182,7 +191,7 @@ async function findSimilar(req, res) {
     );
     return res.status(500).json({
       status: 'error',
-      message: 'AI similarity search failed',
+      message: 'We could not find similar artifacts right now. This may be because there are not enough related artifacts in the database yet.',
     });
   }
 }
