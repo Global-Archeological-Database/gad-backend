@@ -8,7 +8,7 @@
 // ---------------------------------------------------------------------------
 
 const { db, admin } = require('../config/firebase.config');
-const { queryArtifacts } = require('../services/firestore.service');
+const { queryArtifacts, generateSearchTokens } = require('../services/firestore.service');
 const { generateSignedUploadUrl } = require('../services/storage.service');
 
 // ---------------------------------------------------------------------------
@@ -86,7 +86,12 @@ function validateCreateInput(body) {
 
 /**
  * GET /api/artifacts
- * Public — list artifacts with optional filters and cursor-based pagination.
+ * Public — list artifacts with optional filters, keyword search, sort, and cursor-based pagination.
+ *
+ * Query params:
+ *   limit, startAfter, country, cultural_origin, condition, is_3d, uploader_id,
+ *   q (keyword search), sort (newest|oldest|views|analysis),
+ *   materials (comma-separated), tags (comma-separated)
  */
 async function listArtifacts(req, res) {
   try {
@@ -99,6 +104,10 @@ async function listArtifacts(req, res) {
       ? req.query.is_3d === 'true'
       : undefined;
     const uploaderId = req.query.uploader_id || null;
+    const q = req.query.q || null;
+    const sort = req.query.sort || 'newest';
+    const materials = req.query.materials || null;
+    const tags = req.query.tags || null;
 
     const { docs, lastDoc } = await queryArtifacts({
       limit,
@@ -108,6 +117,10 @@ async function listArtifacts(req, res) {
       condition,
       is3d,
       uploaderId,
+      q,
+      sort,
+      materials,
+      tags,
     });
 
     const artifacts = docs.map((doc) => ({
@@ -232,6 +245,8 @@ async function createArtifact(req, res) {
       updated_at: admin.firestore.FieldValue.serverTimestamp(),
       view_count: 0,
       ai_analysis: null,
+      // Search tokens for keyword search
+      _searchTokens: generateSearchTokens(req.body),
     };
 
     const docRef = await db.collection('artifacts').add(artifactData);
@@ -300,6 +315,15 @@ async function updateArtifact(req, res) {
     }
 
     updateData.updated_at = admin.firestore.FieldValue.serverTimestamp();
+
+    // Regenerate search tokens if text fields changed
+    const textFieldsChanged = UPDATABLE_FIELDS.some(
+      (f) => req.body[f] !== undefined && ['title', 'description', 'cultural_origin', 'tags', 'materials', 'age', 'location'].includes(f)
+    );
+    if (textFieldsChanged) {
+      const mergedData = { ...existingData, ...updateData };
+      updateData._searchTokens = generateSearchTokens(mergedData);
+    }
 
     await db.collection('artifacts').doc(id).update(updateData);
 

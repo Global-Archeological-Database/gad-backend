@@ -4,9 +4,10 @@
 // GAD — Authentication & Authorization Middleware
 // ---------------------------------------------------------------------------
 // Exports:
-//   requireAuth  — verifies Firebase ID token, attaches req.user
-//   requireAdmin — checks req.user.role === 'admin'
-//   optionalAuth — same as requireAuth but sets req.user = null if no token
+//   requireAuth   — verifies Firebase ID token, attaches req.user
+//   requireAdmin  — checks req.user.role === 'admin' (admins and owners pass)
+//   requireOwner  — checks req.user.role === 'owner' (only owners pass)
+//   optionalAuth  — same as requireAuth but sets req.user = null if no token
 // ---------------------------------------------------------------------------
 
 const { auth, db } = require('../config/firebase.config');
@@ -79,17 +80,34 @@ async function requireAuth(req, res, next) {
 }
 
 /**
- * Middleware — requires req.user.role === 'admin'.
+ * Middleware — requires req.user.role === 'admin' or 'owner'.
  * MUST be used after requireAuth.
- * Returns 403 JSON if the user is not an admin.
+ * Returns 403 JSON if the user is not an admin or owner.
  *
  * @type {import('express').RequestHandler}
  */
 function requireAdmin(req, res, next) {
-  if (!req.user || req.user.role !== 'admin') {
+  if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'owner')) {
     return res.status(403).json({
       status: 'error',
       message: 'Admin access required.',
+    });
+  }
+  next();
+}
+
+/**
+ * Middleware — requires req.user.role === 'owner'.
+ * MUST be used after requireAuth.
+ * Returns 403 JSON if the user is not an owner.
+ *
+ * @type {import('express').RequestHandler}
+ */
+function requireOwner(req, res, next) {
+  if (!req.user || req.user.role !== 'owner') {
+    return res.status(403).json({
+      status: 'error',
+      message: 'Owner access required.',
     });
   }
   next();
@@ -127,4 +145,4 @@ async function optionalAuth(req, res, next) {
   }
 }
 
-module.exports = { requireAuth, requireAdmin, optionalAuth };
+module.exports = { requireAuth, requireAdmin, requireOwner, optionalAuth };

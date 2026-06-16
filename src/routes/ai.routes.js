@@ -9,6 +9,7 @@
 
 const { Router } = require('express');
 const { requireAuth, optionalAuth } = require('../middleware/auth.middleware');
+const { cacheControl } = require('../middleware/cache.middleware');
 const { aiLimiter } = require('../middleware/rateLimit.middleware');
 const {
   chatbot,
@@ -18,9 +19,9 @@ const {
 
 const router = Router();
 
-// All AI routes require auth + AI rate limiter
-router.post('/chatbot', optionalAuth, aiLimiter, chatbot);
-router.post('/analyze/:artifactId', requireAuth, aiLimiter, analyze);
-router.post('/find-similar/:artifactId', requireAuth, aiLimiter, findSimilar);
+// All AI routes require auth + AI rate limiter — never cached
+router.post('/chatbot', optionalAuth, cacheControl(0), aiLimiter, chatbot);
+router.post('/analyze/:artifactId', requireAuth, cacheControl(0), aiLimiter, analyze);
+router.post('/find-similar/:artifactId', requireAuth, cacheControl(0), aiLimiter, findSimilar);
 
 module.exports = router;

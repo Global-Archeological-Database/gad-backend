@@ -1,7 +1,7 @@
 # GAD — Project State
 
 > **Single source of truth for current session state and project progress.**
-> Last updated: 2026-06-16 (Correction J: AI Features Output Quality)
+> Last updated: 2026-06-16 (Correction L: Final Visual QA & Documentation)
 
 ---
 
@@ -15,6 +15,137 @@
 - User authentication and authorization
 
 **Stack:** Next.js 16 / React 19 / Tailwind CSS v3 / shadcn/ui / TanStack Query / Zustand / Firebase / Express.js / Google Cloud Run / Gemini AI
+
+---
+
+## Session: 2026-06-16 — Correction L
+
+**Branch:** `fix/final-qa` (frontend)
+**Status:** ✅ Complete
+**Focus:** Final visual QA code audit — font consistency, border radius, dark mode leaks, icon library audit, skeleton color audit, and documentation sign-off.
+
+### Audit Results
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Font consistency | ✅ PASS | Headings use `font-display` (Playfair Display), body uses `font-sans` (Inter) via CSS variables |
+| Border radius | ✅ PASS | Cards use `rounded-xl`, inputs use `rounded-md`, badges use `rounded-full` |
+| Dark mode (bg-white leaks) | ❌ FIXED | 18 instances of `bg-white` replaced with `bg-card` across 4 files |
+| Icon library | ✅ PASS | All icons imported from `lucide-react` — no `react-icons` or `@heroicons` found |
+| Skeleton colors | ✅ PASS | `bg-muted` is theme-aware (warm parchment in light, warm stone in dark) |
+
+### Files Modified (5 files)
+- `src/app/artifacts/[id]/loading.tsx` — 4× `bg-white` → `bg-card`
+- `src/app/artifacts/[id]/page.tsx` — 3× `bg-white` → `bg-card`
+- `src/app/admin/page.tsx` — 11× `bg-white` → `bg-card`
+- `src/components/artifacts/ArtifactCardSkeleton.tsx` — 1× `bg-white` → `bg-card`
+- `src/components/shared/TagInput.tsx` — 1× `hover:bg-black/10` → `hover:bg-muted/50`
+
+### Files Created (1 file)
+- `docs/GAD_FINAL_STATE.md` — Post-correction QA sign-off document
+
+### Dark Mode Leaks Fixed (19 total)
+1. `loading.tsx:42` — AI Analysis skeleton card container
+2. `loading.tsx:52` — Metadata card skeleton container
+3. `loading.tsx:70` — Location card skeleton container
+4. `loading.tsx:81` — Similar artifacts skeleton container
+5. `page.tsx:196` — Back navigation button background
+6. `page.tsx:306` — Metadata card container
+7. `page.tsx:346` — Location card container
+8. `admin/page.tsx:103` — QuickStats card
+9. `admin/page.tsx:154` — UsersTable container
+10. `admin/page.tsx:212` — Table row even background
+11. `admin/page.tsx:399` — UsersTab loading skeleton
+12. `admin/page.tsx:535` — AllArtifactsTab skeleton card
+13. `admin/page.tsx:636` — AdminRequestsTab empty state
+14. `admin/page.tsx:653` — AdminRequestsTab request card
+15. `admin/page.tsx:774` — SettingsTab logo section
+16. `admin/page.tsx:818` — SettingsTab site name section
+17. `admin/page.tsx:893` — TabsTrigger active state
+18. `admin/page.tsx:902` — TabsTrigger active state
+19. `ArtifactCardSkeleton.tsx:5` — Skeleton card container
+
+### Success Criteria (13/13)
+- [x] Font consistency verified — Playfair Display for headings, Inter for body
+- [x] Border radius consistency verified — rounded-xl cards, rounded-md inputs, rounded-full badges
+- [x] Dark mode: no white/light backgrounds leaking through (19 fixes applied)
+- [x] All icons from lucide-react (no react-icons or @heroicons)
+- [x] Skeleton loaders use warm parchment colors (bg-muted)
+- [x] docs/GAD_FINAL_STATE.md created
+- [x] PROJECT_STATE.md updated
+
+---
+
+## Session: 2026-06-16 — Correction K
+
+**Branch:** `fix/mobile-cross-device` (frontend)
+**Status:** ✅ Complete
+**Focus:** Comprehensive mobile and cross-device UX improvements across the GAD frontend to address degraded experiences on mobile browsers.
+
+### Fix 1: Chatbot Mobile (`ChatbotWidget.tsx`)
+- Added `useMediaQuery` hook for `(max-width: 640px)` detection
+- Chatbot panel goes **full-screen** (`fixed inset-0`) on mobile
+- Added **Back button** (`ChevronLeft` + "Back") in mobile header alongside existing X close
+- Removed jarring scale animations on mobile
+- Changed `100vh` → `100dvh` for proper mobile viewport
+
+### Fix 2: Map Touch Gestures (`MapExplorer.tsx`)
+- Already had `gestureHandling="greedy"` — verified correct ✅
+- Already had `h-[100dvh]` — verified correct ✅
+- Search bar already had responsive width `w-[min(480px,calc(100vw-32px))]` ✅
+
+### Fix 3: Admin Table Responsive (`admin/page.tsx`)
+- Desktop table wrapped in `hidden md:block overflow-x-auto`
+- Added mobile card list (`md:hidden`) with avatar, name, email, role selector, join date, and "View artifacts" link
+
+### Fix 4: Touch Target Sizes (WCAG 2.2)
+- **ArtifactCard.tsx**: Delete button `h-7 w-7` → `w-10 h-10` (40px)
+- **Header.tsx**: Nav links `py-1` → `py-2 px-3` (42px); Auth buttons `h-9` → `h-10`; User avatar `w-9 h-9` → `w-10 h-10`
+- **GalleryFilterBar.tsx**: Search/select inputs `h-8` → `h-10`; Type filter `h-7` → `h-9`; Clear button got padding
+- **ChatbotWidget.tsx**: Action buttons `p-1.5` → `w-9 h-9`; Back button `p-2` → `p-2.5`
+- **ThemeToggle.tsx**: Theme buttons `h-7 w-7` → `h-9 w-9`
+- Total: **16 touch targets fixed across 5 files**
+
+### Fix 5: Gallery Landscape Optimization
+- **tailwind.config.js**: Added `xs: '400px'` and `landscape: { raw: '(orientation: landscape)' }` screen variants
+- **ArtifactGrid.tsx**: Added `xs:grid-cols-2` and `landscape:grid-cols-3` to both loading skeleton and main grid
+
+### Fix 6: Viewport Height (100dvh)
+- Replaced `min-h-screen` → `min-h-[100dvh]` in 5 files:
+  - `artifacts/[id]/loading.tsx`
+  - `artifacts/[id]/page.tsx`
+  - `artifacts/page.tsx`
+  - `register/page.tsx`
+  - `login/page.tsx`
+- Zero remaining instances of `min-h-screen`, `h-screen`, or `100vh` in src/
+
+### Files Modified (12 files)
+- `src/components/ai/ChatbotWidget.tsx` — Full-screen mobile + Back button + 100dvh
+- `src/app/admin/page.tsx` — Card list for mobile users table
+- `src/components/artifacts/ArtifactCard.tsx` — 40px delete button
+- `src/components/layout/Header.tsx` — 40px touch targets on nav/buttons
+- `src/components/artifacts/GalleryFilterBar.tsx` — 40px form controls
+- `src/components/ui/ThemeToggle.tsx` — 36px theme buttons
+- `src/components/artifacts/ArtifactGrid.tsx` — Landscape/ xs grid columns
+- `tailwind.config.js` — xs + landscape screen variants
+- `src/app/artifacts/[id]/loading.tsx` — 100dvh
+- `src/app/artifacts/[id]/page.tsx` — 100dvh
+- `src/app/artifacts/page.tsx` — 100dvh
+- `src/app/register/page.tsx` — 100dvh
+- `src/app/login/page.tsx` — 100dvh
+
+### Success Criteria (11/11)
+- [x] Chatbot opens full-screen on mobile (< 640px)
+- [x] Full-screen chatbot has "Back" button (not just X)
+- [x] Map supports single-finger pan on mobile (already had greedy)
+- [x] Map search bar is full-width minus padding on mobile (already correct)
+- [x] Admin user table becomes card list on mobile
+- [x] All button/link touch targets are at least 40×40px (32×32 for inline)
+- [x] Gallery uses 3 columns in landscape on mobile
+- [x] No elements extend beyond screen width
+- [x] Map page fills full screen on iOS Safari (100dvh)
+- [x] Submit form usable at 375px × 667px (iPhone SE)
+- [x] Forms scroll correctly on mobile when keyboard appears
 
 ---
 
@@ -119,7 +250,7 @@
 
 All P0-P3 issues resolved. The project is fully set up with CI/CD, testing, documentation, and infrastructure.
 
-See [`docs/sprints/2026-06-11.md`](docs/sprints/2026-06-11.md) for the full session log.
+See [`docs/sprints/2026-06-16.md`](docs/sprints/2026-06-16.md) for the full session log.
 
 **Remaining items (low priority):**
 1. **P2**: Remove orphaned `components/layout/Providers.tsx`

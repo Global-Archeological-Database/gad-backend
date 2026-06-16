@@ -43,7 +43,7 @@ const app = express();
 // --- Global middleware ---
 app.use(compression());
 app.use(corsMiddleware);
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: process.env.MAX_JSON_SIZE || '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(generalLimiter);
 
@@ -53,12 +53,16 @@ const artifactRoutes = require('./src/routes/artifacts.routes');
 const authRoutes = require('./src/routes/auth.routes');
 const aiRoutes = require('./src/routes/ai.routes');
 const adminRoutes = require('./src/routes/admin.routes');
+const adminSettingsRoutes = require('./src/routes/admin-settings.routes');
+const favoritesRoutes = require('./src/routes/favorites.routes');
 
 app.use('/health', healthRoutes);
 app.use('/api/artifacts', artifactRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin/settings', adminSettingsRoutes);
+app.use('/api/favorites', favoritesRoutes);
 
 // 9. 404 handler — always returns JSON, never HTML
 app.use((_req, res) => {

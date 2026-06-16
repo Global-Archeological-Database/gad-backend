@@ -55,6 +55,30 @@
         { "fieldPath": "condition", "order": "ASCENDING" },
         { "fieldPath": "created_at", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "artifacts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "_searchTokens", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "artifacts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "view_count", "order": "DESCENDING" },
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "artifacts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "ai_analysis_timestamp", "order": "DESCENDING" },
+        { "fieldPath": "created_at", "order": "DESCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

@@ -7,6 +7,7 @@
 // ---------------------------------------------------------------------------
 
 const { Router } = require('express');
+const { cacheControl, CACHE_DURATIONS } = require('../middleware/cache.middleware');
 const { db } = require('../config/firebase.config');
 
 const router = Router();
@@ -15,7 +16,7 @@ const router = Router();
  * GET /
  * Returns health status including Firestore connectivity and environment flags.
  */
-router.get('/', async (_req, res) => {
+router.get('/', cacheControl(CACHE_DURATIONS.HEALTH), async (_req, res) => {
   let firestoreStatus = 'error';
 
   try {

@@ -38,7 +38,8 @@ async function register(req, res) {
     }
 
     // Determine role
-    const role = email === 'aahwaanithsinharoy@gmail.com' ? 'admin' : 'user';
+    const OWNER_EMAIL = process.env.OWNER_EMAIL || 'globalarcheologicaldatabase@gmail.com';
+    const role = email === OWNER_EMAIL ? 'owner' : 'user';
 
     const userData = {
       uid,
@@ -51,6 +52,7 @@ async function register(req, res) {
         theme: 'light',
         show_name_publicly: true,
       },
+      favorites: [],
     };
 
     await db.collection('users').doc(uid).set(userData);

@@ -8,11 +8,14 @@
 
 const cors = require('cors');
 
-const ALLOWED_ORIGINS = [
+const DEFAULT_ORIGINS = [
   'http://localhost:3000',
   'http://localhost:3001',
-  process.env.FRONTEND_URL,
 ];
+
+const ALLOWED_ORIGINS = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map(o => o.trim()).filter(Boolean)
+  : DEFAULT_ORIGINS;
 
 /**
  * Checks whether an origin is allowed.

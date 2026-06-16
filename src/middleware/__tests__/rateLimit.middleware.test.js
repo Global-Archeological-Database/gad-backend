@@ -59,7 +59,7 @@ describe('Rate Limit Middleware', () => {
   describe('aiLimiter', () => {
     it('has correct configuration', () => {
       expect(aiLimiter).toBeDefined();
-      expect(aiLimiter.windowMs).toBe(60 * 60 * 1000);
+      expect(aiLimiter.windowMs).toBe(15 * 60 * 1000);
       expect(aiLimiter.max).toBe(20);
     });
 
@@ -78,7 +78,7 @@ describe('Rate Limit Middleware', () => {
   describe('uploadLimiter', () => {
     it('has correct configuration', () => {
       expect(uploadLimiter).toBeDefined();
-      expect(uploadLimiter.windowMs).toBe(24 * 60 * 60 * 1000);
+      expect(uploadLimiter.windowMs).toBe(15 * 60 * 1000);
       expect(uploadLimiter.max).toBe(20);
     });
 

@@ -19,12 +19,14 @@ const { storage } = require('../config/firebase.config');
  * @param {string} contentType - The MIME type of the file.
  * @returns {Promise<{uploadUrl: string, publicUrl: string}>}
  */
+const SIGNED_URL_EXPIRY = parseInt(process.env.SIGNED_URL_EXPIRY_MS, 10) || (15 * 60 * 1000);
+
 async function generateSignedUploadUrl(uid, artifactId, fileName, contentType) {
   const bucket = storage.bucket();
   const filePath = `artifacts/${uid}/${artifactId}/${fileName}`;
   const file = bucket.file(filePath);
 
-  const expiresAt = Date.now() + 15 * 60 * 1000; // 15 minutes
+  const expiresAt = Date.now() + SIGNED_URL_EXPIRY; // 15 minutes
 
   const [uploadUrl] = await file.getSignedUrl({
     version: 'v4',

@@ -8,6 +8,7 @@
 
 const { Router } = require('express');
 const { requireAuth } = require('../middleware/auth.middleware');
+const { cacheControl, CACHE_DURATIONS } = require('../middleware/cache.middleware');
 const {
   listArtifacts,
   getArtifact,
@@ -19,14 +20,14 @@ const {
 
 const router = Router();
 
-// Public routes
-router.get('/', listArtifacts);
-router.get('/:id', getArtifact);
+// Public routes — cached
+router.get('/', cacheControl(CACHE_DURATIONS.ARTIFACT_LIST), listArtifacts);
+router.get('/:id', cacheControl(CACHE_DURATIONS.ARTIFACT_DETAIL), getArtifact);
 
-// Authenticated routes
-router.post('/', requireAuth, createArtifact);
-router.put('/:id', requireAuth, updateArtifact);
-router.delete('/:id', requireAuth, deleteArtifact);
-router.post('/:id/upload-url', requireAuth, generateUploadUrl);
+// Authenticated routes — never cached
+router.post('/', requireAuth, cacheControl(0), createArtifact);
+router.put('/:id', requireAuth, cacheControl(0), updateArtifact);
+router.delete('/:id', requireAuth, cacheControl(0), deleteArtifact);
+router.post('/:id/upload-url', requireAuth, cacheControl(0), generateUploadUrl);
 
 module.exports = router;

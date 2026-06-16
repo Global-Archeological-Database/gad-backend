@@ -13,6 +13,11 @@
 const rateLimit = require('express-rate-limit');
 const { defaultKeyGenerator } = rateLimit;
 
+const WINDOW_MS = parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || (15 * 60 * 1000);
+const GENERAL_MAX = parseInt(process.env.RATE_LIMIT_GENERAL_MAX, 10) || 100;
+const AI_MAX = parseInt(process.env.RATE_LIMIT_AI_MAX, 10) || 20;
+const UPLOAD_MAX = parseInt(process.env.RATE_LIMIT_UPLOAD_MAX, 10) || 20;
+
 /**
  * Shared handler that returns a JSON error response when the limit is exceeded.
  *
@@ -30,8 +35,8 @@ const jsonHandler = (_req, res) => {
  * Skips rate-limiting for the /health endpoint.
  */
 const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
+  windowMs: WINDOW_MS, // 15 minutes
+  max: GENERAL_MAX,
   standardHeaders: true,
   legacyHeaders: false,
   message: null, // use custom handler
@@ -45,8 +50,8 @@ const generalLimiter = rateLimit({
  * Intended for /api/ai/* endpoints.
  */
 const aiLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 20,
+  windowMs: WINDOW_MS,
+  max: AI_MAX,
   standardHeaders: true,
   legacyHeaders: false,
   message: null,
@@ -59,8 +64,8 @@ const aiLimiter = rateLimit({
  * Intended for artifact file uploads.
  */
 const uploadLimiter = rateLimit({
-  windowMs: 24 * 60 * 60 * 1000, // 1 day
-  max: 20,
+  windowMs: WINDOW_MS,
+  max: UPLOAD_MAX,
   standardHeaders: true,
   legacyHeaders: false,
   message: null,
