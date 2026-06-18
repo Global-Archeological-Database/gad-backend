@@ -1145,3 +1145,18 @@ Full git-based deployment of both backend (Cloud Run) and frontend (Vercel) to p
 - Backend: `ai.controller.js`, `health.routes.js`
 
 **Known Issues Remaining**: Same 4 from previous sessions (Orphaned Providers.tsx, getFieldKey() bug, NEXT_PUBLIC_API_URL not in secrets, Frontend CI not verified)
+
+### Fix 6 (Emergency): Map Crash — "This page couldn't load" + Missing Markers
+
+**Time:** ~2026-06-18 05:16 CEST
+
+**Root Cause**: The previous fix for [`MapExplorer.tsx`]'s `handleBoundsChanged` changed the callback signature from destructuring `{ map }` from the event object to receiving the parameter as a `google.maps.Map` instance. However, the `@vis.gl/react-google-maps` library's `Map` component `onBoundsChanged` callback passes a `MapEvent` object `{ map, type }`, not a `google.maps.Map` directly. The parameter was treated as a map instance and `.getBounds()` was called on the `MapEvent` object, throwing `TypeError: instance.getBounds is not a function`. This runtime error caused the entire map component to crash.
+
+**Fix**:
+- Changed parameter from `(map?: google.maps.Map)` to `(event: { map?: google.maps.Map })`
+- Changed instance resolution from `map || mapRef.current` to `event?.map ?? mapRef.current`
+- Now correctly destructures the `.map` property from the event object
+
+**Commit**: [`64ba038`] fix: correct onBoundsChanged handler signature - library passes MapEvent object not map instance (frontend)
+
+**Status**: Deployed to the-gad.org via Vercel auto-deploy
