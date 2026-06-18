@@ -4,11 +4,12 @@
 // GAD — Health Route
 // ---------------------------------------------------------------------------
 // GET / — checks Firestore connectivity and returns system status.
+// GET /ai — checks Gemini model initialization status.
 // ---------------------------------------------------------------------------
 
 const { Router } = require('express');
 const { cacheControl, CACHE_DURATIONS } = require('../middleware/cache.middleware');
-const { db } = require('../config/firebase.config');
+const { db, geminiModel } = require('../config/firebase.config');
 
 const router = Router();
 
@@ -48,6 +49,23 @@ router.get('/', cacheControl(CACHE_DURATIONS.HEALTH), async (_req, res) => {
       firestore: firestoreStatus,
     },
   });
+});
+
+/**
+ * GET /ai
+ * Returns the health status of the Gemini AI model.
+ */
+router.get('/ai', async (req, res) => {
+  try {
+    const modelHealth = geminiModel ? 'ok' : 'unavailable';
+    res.json({
+      status: 'ok',
+      gemini: modelHealth,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'error', gemini: 'error', message: err.message });
+  }
 });
 
 module.exports = router;

@@ -105,6 +105,7 @@ async function analyze(req, res) {
     return res.status(500).json({
       status: 'error',
       message: 'AI analysis failed',
+      detail: process.env.NODE_ENV === 'development' ? err.message : undefined,
     });
   }
 }
@@ -192,6 +193,7 @@ async function findSimilar(req, res) {
     return res.status(500).json({
       status: 'error',
       message: 'We could not find similar artifacts right now. This may be because there are not enough related artifacts in the database yet.',
+      detail: process.env.NODE_ENV === 'development' ? err.message : undefined,
     });
   }
 }

@@ -1126,3 +1126,22 @@ Full git-based deployment of both backend (Cloud Run) and frontend (Vercel) to p
 - [x] No regressions in existing tests
 
 ### Status: ✅ Complete — Ready for PR merge
+
+---
+
+### Session 2026-06-18: Database & UI Bug Fixes
+
+**Scope**: Fixed 5 issues across frontend and backend.
+
+**Changes**:
+1. [`LocationPicker.tsx`] — Fixed map not scrollable/zoomable in Submit Artefact form (removed mixed controlled/uncontrolled props, event propagation fixes)
+2. [`MapExplorer.tsx`] — Fixed missing artefact markers on main map (timing race condition with viewport culling, controlled props, handler signature)
+3. [`Header.tsx`] — Fixed sharp UI contrast in light mode (opacity modifiers for buttons/avatar in light mode)
+4. [`ai.controller.js`] + [`health.routes.js`] — Added AI health check endpoint and detailed error diagnostics
+5. [`ArtifactAISection.tsx`] + [`SimilarArtifactsSection.tsx`] + [`api.ts`] — Enhanced error handling with specific messages for auth, rate limit, and network errors
+
+**Files Modified**:
+- Frontend: `LocationPicker.tsx`, `MapExplorer.tsx`, `Header.tsx`, `ArtifactAISection.tsx`, `SimilarArtifactsSection.tsx`, `api.ts`
+- Backend: `ai.controller.js`, `health.routes.js`
+
+**Known Issues Remaining**: Same 4 from previous sessions (Orphaned Providers.tsx, getFieldKey() bug, NEXT_PUBLIC_API_URL not in secrets, Frontend CI not verified)
